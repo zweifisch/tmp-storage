@@ -15,13 +15,15 @@ describe 'TmpStorage', ->
 
 	describe 'expires', ->
 		storage.setItem 'vanish later', true, '2sec'
-		it 'should be available within 2 sec', (done)->
-			after 1000, ->
+		it 'should be available before expiration', (done)->
+			after 500, ->
 				storage.getItem('vanish later').should.equal true
 				done()
 
-		it 'should vanish in 2 sec', (done)->
+	describe 'expires', ->
+		storage.setItem 'expires', true, '1sec'
+		it 'should vanish after expiration', (done)->
 			after 1000, ->
-				should.not.exist storage.getItem 'vanish later'
+				should.not.exist storage.getItem 'expires'
 				done()
 

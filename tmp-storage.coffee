@@ -21,43 +21,44 @@ getSeconds = (timeStr)->
 
 class TmpStorage
 
-	constructor: (@prefix)->
+	constructor: (@storageKey)->
 		@load()
 
 	load:->
 		try
-			@data = JSON.parse localStorage.getItem @prefix
+			@data = JSON.parse localStorage.getItem @storageKey
 		@data = {} unless typeof @data is 'object' and @data?
-		@expires = @data.__expires ? {} 
+		@data.__expires = @data.__expires ? {} 
 
 	flush:->
-		localStorage.setItem @prefix,JSON.stringify @data
+		localStorage.setItem @storageKey,JSON.stringify @data
 
-	clearExpiredValues: =>
+	clearExpiredValues: ->
 		now = getTimestamp()
 		dirty = false
-		for own key, time of @expires
+		for own key, time of @data.__expires
 			if time <= now
-				console.log time,now, now-time
 				dirty = true
-				delete @expires[key]
+				delete @data.__expires[key]
 				delete @data[key]
 		if dirty then @flush()
 
-	setItem: (key, value, expire)=>
+	setItem: (key, value, expire)->
 		@data[key] = value
 		if expire?
-			@expires[key] = getTimestamp() + getSeconds expire
+			@data.__expires[key] = getTimestamp() + getSeconds expire
+		else
+			delete @data.__expires[key]
 		@flush()
 
-	getItem: (key)=>
+	getItem: (key)->
 		@clearExpiredValues()
 		@data[key]
 
-	getExpiration: (key)=>
-		@expires[key]
+	getExpiration: (key)->
+		@data.__expires[key]
 
 	dispose: ->
-		# localStorage.clear
+		delete localStorage @storageKey
 
 @TmpStorage = TmpStorage

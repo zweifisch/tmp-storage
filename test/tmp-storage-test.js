@@ -19,17 +19,20 @@
         return storage.getItem('array').should.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9]);
       });
     });
-    return describe('expires', function() {
+    describe('expires', function() {
       storage.setItem('vanish later', true, '2sec');
-      it('should be available within 2 sec', function(done) {
-        return after(1000, function() {
+      return it('should be available before expiration', function(done) {
+        return after(500, function() {
           storage.getItem('vanish later').should.equal(true);
           return done();
         });
       });
-      return it('should vanish in 2 sec', function(done) {
+    });
+    return describe('expires', function() {
+      storage.setItem('expires', true, '1sec');
+      return it('should vanish after expiration', function(done) {
         return after(1000, function() {
-          should.not.exist(storage.getItem('vanish later'));
+          should.not.exist(storage.getItem('expires'));
           return done();
         });
       });
