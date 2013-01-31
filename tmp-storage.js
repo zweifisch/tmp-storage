@@ -98,6 +98,6 @@
 
   })();
 
-  this.TmpStorage = TmpStorage;
+  window.TmpStorage = TmpStorage;
 
 }).call(this);

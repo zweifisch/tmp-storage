@@ -61,4 +61,4 @@ class TmpStorage
 	dispose: ->
 		delete localStorage @storageKey
 
-@TmpStorage = TmpStorage
+window.TmpStorage = TmpStorage
