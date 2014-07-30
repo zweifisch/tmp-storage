@@ -28,7 +28,7 @@ class TmpStorage
 		try
 			@data = JSON.parse localStorage.getItem @storageKey
 		@data = {} unless typeof @data is 'object' and @data?
-		@data.__expires = @data.__expires ? {} 
+		@data.__expires = @data.__expires ? {}
 
 	flush:->
 		localStorage.setItem @storageKey,JSON.stringify @data
@@ -61,4 +61,4 @@ class TmpStorage
 	dispose: ->
 		delete localStorage @storageKey
 
-window.TmpStorage = TmpStorage
+module.exports = TmpStorage
